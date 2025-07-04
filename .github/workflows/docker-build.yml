@@ -58,7 +58,6 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          target: production
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -78,7 +77,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          target: development
           load: true
           tags: mcp-github-projects:test
           cache-from: type=gha
@@ -88,7 +86,8 @@ jobs:
           # Create a test .env file
           echo "GITHUB_TOKEN=test_token" > .env
           echo "GITHUB_OWNER=test_owner" >> .env
-          echo "NODE_ENV=development" >> .env
+          echo "GITHUB_OWNER_TYPE=user" >> .env
+          echo "ALLOWED_REPOS=" >> .env
           
           # Test that the container can start (will fail quickly due to invalid token, but that's expected)
           timeout 30s docker run --rm --env-file .env mcp-github-projects:test || true
