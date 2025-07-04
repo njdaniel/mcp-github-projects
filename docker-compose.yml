@@ -1,42 +1,23 @@
 services:
-  # Development service
-  mcp-github-dev:
+  # MCP GitHub Projects Server
+  mcp-github:
     build:
       context: .
       dockerfile: Dockerfile
-      target: development
-    container_name: mcp-github-projects-dev
-    ports:
-      - "3000:3000"
+    container_name: mcp-github-projects
     volumes:
       - .:/app
       - /app/node_modules
     environment:
-      - NODE_ENV=development
       - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - GITHUB_OWNER=${GITHUB_OWNER}
+      - GITHUB_OWNER_TYPE=${GITHUB_OWNER_TYPE:-user}
+      - ALLOWED_REPOS=${ALLOWED_REPOS}
     stdin_open: true
     tty: true
     restart: unless-stopped
     networks:
       - mcp-network
-
-  # Production service
-  mcp-github-prod:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: production
-    container_name: mcp-github-projects-prod
-    ports:
-      - "3001:3000"
-    environment:
-      - NODE_ENV=production
-      - GITHUB_TOKEN=${GITHUB_TOKEN}
-    restart: unless-stopped
-    networks:
-      - mcp-network
-    profiles:
-      - production
 
   # Optional: Redis for caching (if needed in the future)
   redis:
