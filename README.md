@@ -1,6 +1,8 @@
 # GitHub Projects MCP Server
 
 [![smithery badge](https://smithery.ai/badge/mcp-github-projects)](https://smithery.ai/server/taylor-lindores-reeves/mcp-github-projects)
+[![CI](https://github.com/njdaniel/mcp-github-projects/actions/workflows/ci.yml/badge.svg)](https://github.com/njdaniel/mcp-github-projects/actions/workflows/ci.yml)
+[![Docker Build](https://github.com/njdaniel/mcp-github-projects/actions/workflows/docker-build.yml/badge.svg)](https://github.com/njdaniel/mcp-github-projects/actions/workflows/docker-build.yml)
 
 An MCP (Model Context Protocol) server that enables AI agents to create and manage Agile Sprint-based projects using GitHub Projects.
 
@@ -95,6 +97,62 @@ ALLOWED_REPOS=the-troops/sms-troopers,manuelbiermann/convo-run
 ```
 
 If you try to perform a write operation on a repository not in this list, the server will throw an error and block the action.
+
+## Docker Setup
+
+### Quick Start with Docker
+
+For a complete Docker-based setup, see [DOCKER.md](./DOCKER.md) for detailed instructions.
+
+#### Using Pre-built Images
+
+```bash
+# Pull and run from GitHub Container Registry
+docker run -d --name mcp-github-projects \
+  -e GITHUB_TOKEN=your_token \
+  -e GITHUB_OWNER=your_username \
+  -p 3000:3000 \
+  ghcr.io/njdaniel/mcp-github-projects:latest
+```
+
+#### Building Locally
+
+1. **Clone and setup:**
+   ```bash
+   git clone <repository>
+   cd mcp-github-projects
+   cp .env.example .env
+   # Edit .env with your GitHub token
+   ```
+
+2. **Start development environment:**
+   ```bash
+   ./scripts/docker.sh dev
+   # or using npm scripts:
+   npm run docker:dev
+   ```
+
+3. **Start production environment:**
+   ```bash
+   ./scripts/docker.sh prod
+   # or using npm scripts:
+   npm run docker:prod
+   ```
+
+### Available Docker Commands
+
+- `./scripts/docker.sh dev` - Start development environment with hot reloading
+- `./scripts/docker.sh prod` - Start production environment
+- `./scripts/docker.sh build` - Build Docker images
+- `./scripts/docker.sh clean` - Clean up containers and images
+- `./scripts/docker.sh logs` - Show container logs
+- `./scripts/docker.sh shell` - Open shell in development container
+
+**Or use the Makefile for convenience:**
+- `make dev` / `make prod` / `make build` / `make clean` / `make logs` / `make shell`
+- `make help` - Show all available commands
+
+The development environment runs on `http://localhost:3000` and production on `http://localhost:3001`.
 
 ## GitHub Token Permissions
 

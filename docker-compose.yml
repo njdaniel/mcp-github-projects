@@ -1,0 +1,41 @@
+services:
+  # MCP GitHub Projects Server
+  mcp-github:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mcp-github-projects
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - GITHUB_OWNER=${GITHUB_OWNER}
+      - GITHUB_OWNER_TYPE=${GITHUB_OWNER_TYPE:-user}
+      - ALLOWED_REPOS=${ALLOWED_REPOS}
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  # Optional: Redis for caching (if needed in the future)
+  redis:
+    image: redis:7-alpine
+    container_name: mcp-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - mcp-network
+    profiles:
+      - cache
+
+volumes:
+  redis_data:
+
+networks:
+  mcp-network:
+    driver: bridge
