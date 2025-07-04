@@ -73,6 +73,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           target: development
           cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Generate release notes
         run: |
